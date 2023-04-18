@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>User_Trailmix__c</fullName>
+    <externalId>false</externalId>
+    <label>User Trailmix</label>
+    <referenceTo>trailheadapp__User_Trailmix__c</referenceTo>
+    <relationshipLabel>User Trailmix Badges</relationshipLabel>
+    <relationshipName>User_Trailmix_Badges</relationshipName>
+    <relationshipOrder>1</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>
