@@ -13,5 +13,13 @@
         <members>Trailmix_Badge__c</members>
         <name>CustomObject</name>
     </types>
+    <types>
+        <members>Trail Tracker Integration</members>
+        <name>Profile</name>
+    </types>
+    <types>
+		<members>TrailmixAssignmentHelper</members>
+		<name>ApexClass</name>
+	</types>
     <version>55.0</version>
 </Package>
