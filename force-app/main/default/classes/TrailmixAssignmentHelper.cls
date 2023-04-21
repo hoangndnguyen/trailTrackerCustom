@@ -8,9 +8,13 @@ public with sharing class TrailmixAssignmentHelper {
         Set<Id> userIds = new Set<Id>();
         Set<Id> trailmixIds = new Set<Id>();
         for(trailheadapp__Trailmix_Assignment__c ta : trailmixAssignments){
-            userTrailmixList.add(new List<Id>{ta.trailheadapp__User__c, ta.trailheadapp__Trailmix__c});
-            trailmixIds.add(ta.trailheadapp__Trailmix__c);
-            userIds.add(ta.trailheadapp__User__c);
+            // Check if the status is good
+            System.debug('ta.trailheadapp__Status__c: '+ ta.trailheadapp__Status__c);
+            if(ta.trailheadapp__Status__c == 'Processed' && ta.trailheadapp__Status__c != 'Error' && ta.trailheadapp__Status__c != 'Not Processed'){
+                userTrailmixList.add(new List<Id>{ta.trailheadapp__User__c, ta.trailheadapp__Trailmix__c});
+            	trailmixIds.add(ta.trailheadapp__Trailmix__c);
+            	userIds.add(ta.trailheadapp__User__c);
+            }
         }
         System.debug('userIds: ' +userIds);
         System.debug('userTrailmixList: ' +userTrailmixList);
@@ -29,7 +33,6 @@ public with sharing class TrailmixAssignmentHelper {
                 for(List<Id> ut : userTrailmixList){
                     if(uId == ut[0]){
                         tmId.add(ut[1]);
-                        //userTrailmixList.remove(ut); // remove the one added to the map
                     }
                 }
                 userTrailmixMap.put(uId, tmId);
@@ -67,7 +70,7 @@ public with sharing class TrailmixAssignmentHelper {
             userBadgeReality = [SELECT Id, trailheadapp__User__c, trailheadapp__Badge__c 
                                 FROM trailheadapp__User_Badge__c
                                 WHERE trailheadapp__User__c in : userIds];
-            System.debug('userBadgeReality1: ' + userBadgeReality);
+            System.debug('userBadgeReality: ' + userBadgeReality);
             Map<Id, Set<Id>> userBadgeRealityMap = new Map<Id, Set<Id>>();
             for(Id uId : userIds){
                 for(Integer i = 0; i < userBadgeReality.size(); i++){
@@ -130,12 +133,14 @@ public with sharing class TrailmixAssignmentHelper {
                     for(Database.Error err : sr.getErrors()) {
                         System.debug('The following error has occurred.');                    
                         System.debug(err.getStatusCode() + ': ' + err.getMessage());
-                        System.debug('Account fields that affected this error: ' + err.getFields());
+                        System.debug('User Badge fields that affected this error: ' + err.getFields());
                     }
                 }
             }
         }else{
             System.debug('No junction records of master objects');
         }
-    }
+        
+    } //End of createUserBadgeRecords method
+    
 }

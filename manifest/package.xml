@@ -14,12 +14,17 @@
         <name>CustomObject</name>
     </types>
     <types>
-        <members>Trail Tracker Integration</members>
-        <name>Profile</name>
+        <members>Custom_Trail_Tracker</members>
+        <name>PermissionSet</name>
     </types>
     <types>
 		<members>TrailmixAssignmentHelper</members>
+        <members>ScheduleCreateUserTrailmixBadgeRecords</members>
 		<name>ApexClass</name>
 	</types>
+    <types>
+        <members>TrailmixAssignmentTrigger</members>
+        <name>ApexTrigger</name>
+    </types>
     <version>55.0</version>
 </Package>

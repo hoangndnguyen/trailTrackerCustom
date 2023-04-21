@@ -149,15 +149,16 @@
     <enableHistory>true</enableHistory>
     <enableLicensing>false</enableLicensing>
     <enableReports>true</enableReports>
-    <enableSearch>false</enableSearch>
+    <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <externalSharingModel>ControlledByParent</externalSharingModel>
     <label>User Trailmix Badge</label>
     <nameField>
+        <displayFormat>UTB-{00000}</displayFormat>
         <label>User Trailmix Badge Name</label>
         <trackHistory>false</trackHistory>
-        <type>Text</type>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>User Trailmix Badges</pluralLabel>
     <searchLayouts></searchLayouts>

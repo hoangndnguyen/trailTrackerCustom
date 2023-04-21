@@ -155,9 +155,10 @@
     <externalSharingModel>ControlledByParent</externalSharingModel>
     <label>Trailmix Badge</label>
     <nameField>
+        <displayFormat>TB-{00000}</displayFormat>
         <label>Trailmix Badge Name</label>
         <trackHistory>false</trackHistory>
-        <type>Text</type>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Trailmix Badges</pluralLabel>
     <searchLayouts></searchLayouts>
