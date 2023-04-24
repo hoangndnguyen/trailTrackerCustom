@@ -6,37 +6,37 @@ public with sharing class ScheduleCreateUserTrailmixBadgeRecords implements Sche
         System.debug(createdDate);
         System.debug(createdDateMax);
 
-        // Get the User Trailmix created today and store their Trailmix ID created yesterday
-        List<trailheadapp__User_Trailmix__c> userTrailmixes = [SELECT Id, trailheadapp__User__c, trailheadapp__Trailmix__c
-                                                            FROM trailheadapp__User_Trailmix__c 
+        // Get the User Bage from Badge ID
+            List<trailheadapp__User_Badge__c> userBadges = [SELECT Id, trailheadapp__Badge__c, trailheadapp__User__c 
+                                                            FROM trailheadapp__User_Badge__c 
                                                             WHERE CreatedDate >= :createdDate 
                                                             AND CreatedDate < :createdDateMax];
 
-        if(userTrailmixes.size() > 0){
-            Set<Id> trailmixId = new Set<Id>();
-            Set<Id> userTrailmixId = new Set<Id>();                
-            // Map<trailmixid, Set<List<usertrailmixid, userid>>
-            Map<Id,Set<List<Id>>> trailMixUserMap = new Map<Id,Set<List<Id>>>();
-            for (trailheadapp__User_Trailmix__c ut: userTrailmixes){
-                trailmixId.add(ut.trailheadapp__Trailmix__c);
-                userTrailmixId.add(ut.Id);
+        if(userBadges.size() > 0){
+            Set<Id> badgeId = new Set<Id>();
+            Set<Id> userBadgeId = new Set<Id>();                
+            // Map<badgeid, Set<List<userbadgeid, userid>>
+            Map<Id,Set<List<Id>>> userBadgeMap = new Map<Id,Set<List<Id>>>();
+            for (trailheadapp__User_Badge__c ub: userBadges){
+                badgeId.add(ub.trailheadapp__Badge__c);
+                userBadgeId.add(ub.Id);
                 Set<List<Id>> ids = new Set<List<Id>>();
                 List<Id> uids = new List<Id>();
-                if(trailMixUserMap.containsKey(ut.trailheadapp__Trailmix__c)){
-                    ids = trailMixUserMap.get(ut.trailheadapp__Trailmix__c);
+                if(userBadgeMap.containsKey(ub.trailheadapp__Badge__c)){
+                    ids = userBadgeMap.get(ub.trailheadapp__Badge__c);
                 }
-                uids.add(ut.Id);
-                uids.add(ut.trailheadapp__User__c);
+                uids.add(ub.Id);
+                uids.add(ub.trailheadapp__User__c);
                 ids.add(uids);
-                trailMixUserMap.put(ut.trailheadapp__Trailmix__c, ids);
+                userBadgeMap.put(ub.trailheadapp__Badge__c, ids);
             }
-            System.debug('trailMixUserMap size:' + trailMixUserMap.size());
-            System.debug('trailMixUserMap: ' + trailMixUserMap);
+            System.debug('userBadgeMap size:' + userBadgeMap.size());
+            System.debug('userBadgeMap: ' + userBadgeMap);
             
             // Get the User Trailmix Badge from the User Trailmix
             List<User_Trailmix_Badge__c> userTrailmixeBadges = [SELECT Id, User_Badge__c, User_Trailmix__c
                                                                 FROM User_Trailmix_Badge__c 
-                                                                WHERE User_Trailmix__c in :userTrailmixId];
+                                                                WHERE User_Badge__c in :userBadgeId];
             // Create a list of User Trailmix Badge (reality)
             List<List<Id>> userTrailBadgeReality = new List<List<Id>>();
             for (User_Trailmix_Badge__c utb: userTrailmixeBadges){
@@ -50,48 +50,48 @@ public with sharing class ScheduleCreateUserTrailmixBadgeRecords implements Sche
             // Get the the Trailmix Badges from Trailmix ID and store their Badge ID
             List<Trailmix_Badge__c> trailmixBadges = [SELECT Id, Trailmix__c, Badge__c 
                                                     FROM Trailmix_Badge__c 
-                                                    WHERE Trailmix__c in :trailmixId];
-            Set<Id> badgeId = new Set<Id>();
+                                                    WHERE Badge__c in :badgeId];
+            Set<Id> trailmixId = new Set<Id>();
             for (Trailmix_Badge__c tb: trailmixBadges){
-                badgeId.add(tb.Badge__c);
+                trailmixId.add(tb.Trailmix__c);
             }
             System.debug('trailmixBadges size:' + trailmixBadges.size());
             System.debug('trailmixBadges: ' + trailmixBadges);
-            System.debug('badgeId size:' + badgeId.size()); System.debug('badgeId: ' + badgeId);
+            System.debug('trailmixId size:' + trailmixId.size()); System.debug('trailmixId: ' + trailmixId);
             
-            // Get the User Bage from Badge ID
-            List<trailheadapp__User_Badge__c> userBadges = [SELECT Id, trailheadapp__Badge__c, trailheadapp__User__c 
-                                                            FROM trailheadapp__User_Badge__c 
-                                                            WHERE trailheadapp__Badge__c in :badgeId];
+            // Get the User Trailmix created today and store their Trailmix ID created yesterday
+            List<trailheadapp__User_Trailmix__c> userTrailmixes = [SELECT Id, trailheadapp__User__c, trailheadapp__Trailmix__c
+                                                                FROM trailheadapp__User_Trailmix__c
+                                                                WHERE trailheadapp__Trailmix__c in :trailmixId];
             
             // Map<badgeid, Set<List<userbadgeid, userid>>
-            Map<Id,Set<List<Id>>> badgeUserMap = new Map<Id,Set<List<Id>>>();
-            for(trailheadapp__User_Badge__c ub: userBadges){
+            Map<Id,Set<List<Id>>> userTrailmixMap = new Map<Id,Set<List<Id>>>();
+            for(trailheadapp__User_Trailmix__c ut: userTrailmixes){
                 Set<List<Id>> ids = new Set<List<Id>>();
                 List<Id> uids = new List<Id>();
-                if(badgeUserMap.containsKey(ub.trailheadapp__Badge__c)){
-                    ids = badgeUserMap.get(ub.trailheadapp__Badge__c);
+                if(userTrailmixMap.containsKey(ut.trailheadapp__Trailmix__c)){
+                    ids = userTrailmixMap.get(ut.trailheadapp__Trailmix__c);
                 }
-                uids.add(ub.Id);
-                uids.add(ub.trailheadapp__User__c);
+                uids.add(ut.Id);
+                uids.add(ut.trailheadapp__User__c);
                 ids.add(uids);
-                badgeUserMap.put(ub.trailheadapp__Badge__c, ids);
+                userTrailmixMap.put(ut.trailheadapp__Trailmix__c, ids);
             }
-            System.debug('badgeUserMap size:' + badgeUserMap.size()); 
-            System.debug('badgeUserMap:' + badgeUserMap);
+            System.debug('userTrailmixMap size:' + userTrailmixMap.size()); 
+            System.debug('userTrailmixMap:' + userTrailmixMap);
 
             // Compare and create User Trailmix Badge reality vs expected
             List<User_Trailmix_Badge__c> utbToCreate = new List<User_Trailmix_Badge__c>();
             for(Trailmix_Badge__c tb:  trailmixBadges){
-                Set<List<Id>> trailmixUserMap1 = new Set<List<Id>>();
-                Set<List<Id>> badgeUserMap1 = new Set<List<Id>>();
-                trailmixUserMap1 = trailmixUserMap.get(tb.Trailmix__c); System.debug('trailmixUserMap1: ' + trailmixUserMap1);
-                badgeUserMap1 = badgeUserMap.get(tb.Badge__c); System.debug('badgeUserMap1: ' + badgeUserMap1);
-                if(trailmixUserMap1.size() == 0 || badgeUserMap1.size() == 0){
+                Set<List<Id>> userTrailmixesCloned = new Set<List<Id>>();
+                Set<List<Id>> userBadgesCloned = new Set<List<Id>>();
+                userTrailmixesCloned = userTrailmixMap.get(tb.Trailmix__c); System.debug('userTrailmixesCloned: ' + userTrailmixesCloned);
+                userBadgesCloned = userBadgeMap.get(tb.Badge__c); System.debug('userBadgesCloned: ' + userBadgesCloned);
+                if(userTrailmixesCloned == null || userBadgesCloned.size() == null){
                     continue; // userBadge was not created
                 }else{
-                    for(List<Id> tum: trailmixUserMap1){
-                        for(List<Id> bum: badgeUserMap1){
+                    for(List<Id> tum: userTrailmixesCloned){
+                        for(List<Id> bum: userBadgesCloned){
                             if(tum[1] == bum[1]){
                                 Boolean found = false;
                                 for(Integer i = 0; i< userTrailBadgeReality.size(); i++){
@@ -134,7 +134,7 @@ public with sharing class ScheduleCreateUserTrailmixBadgeRecords implements Sche
                 }
             }
         }else{
-            System.debug('No User Trailmix records create yesterday.');
+            System.debug('No User Badge records create yesterday.');
         }
         
     }
