@@ -3,12 +3,12 @@ public with sharing class TrailmixAssignmentHelper {
     public static void assignBadges(List<trailheadapp__Trailmix_Assignment__c> trailmixAssignments){
         Set<Id> userIds = new Set<Id>();
         Set<Id> trailmixIds = new Set<Id>();
-        for(trailheadapp__Trailmix_Assignment__c ta : trailmixAssignments){
+        for(trailheadapp__Trailmix_Assignment__c trailmixAssignment : trailmixAssignments){
             // Check if the status is good
-            System.debug('ta.trailheadapp__Status__c: '+ ta.trailheadapp__Status__c);
-            if(ta.trailheadapp__Status__c == 'Processed' && ta.trailheadapp__Status__c != 'Error' && ta.trailheadapp__Status__c != 'Not Processed'){
-            	trailmixIds.add(ta.trailheadapp__Trailmix__c);
-            	userIds.add(ta.trailheadapp__User__c);
+            System.debug('trailmixAssignment.trailheadapp__Status__c: '+ trailmixAssignment.trailheadapp__Status__c);
+            if(trailmixAssignment.trailheadapp__Status__c == 'Processed'){
+            	trailmixIds.add(trailmixAssignment.trailheadapp__Trailmix__c);
+            	userIds.add(trailmixAssignment.trailheadapp__User__c);
             }
         }
         System.debug('userIds: ' +userIds);
@@ -18,13 +18,12 @@ public with sharing class TrailmixAssignmentHelper {
         if(trailmixBadgeMap == null){
             System.debug('No junction records of master objects');
             return;
-        }else{
-            Map<Id, Set<Id>> userBadgeRealityMap = constructUserBadgeRealityMap(userIds);
-            List<trailheadapp__User_Badge__c> userBadges = createUserBadge(trailmixBadgeMap, userBadgeRealityMap, trailmixIds, userIds);
-            if (!userBadges.isEmpty()) {
-                insert userBadges;
-            }
         }
+        Map<Id, Set<Id>> userBadgeRealityMap = constructUserBadgeRealityMap(userIds);
+        List<trailheadapp__User_Badge__c> userBadges = createUserBadge(trailmixBadgeMap, userBadgeRealityMap, trailmixIds, userIds);
+        if (!userBadges.isEmpty()) {
+            insert userBadges;
+        }        
     }
 
     /**
@@ -92,6 +91,7 @@ public with sharing class TrailmixAssignmentHelper {
             }
         }
         System.debug('userBadgesToCreate: ' + userBadgesToCreate);
+        System.debug('userBadgesToCreate size: ' + userBadgesToCreate.size());
         return userBadgesToCreate;
     }
 
