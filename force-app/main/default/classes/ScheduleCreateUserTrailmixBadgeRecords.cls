@@ -24,16 +24,18 @@ public with sharing class ScheduleCreateUserTrailmixBadgeRecords implements Sche
 
         Map<Id, Set<List<Id>>> userTrailmixRealityMap =  constructUserTrailmixMap(userIds);
 
-        List<trailheadapp__User_Badge__c> userBadges = [SELECT Id, trailheadapp__User__c,trailheadapp__Badge__c FROM trailheadapp__User_Badge__c WHERE trailheadapp__User__c in :userIds];
+        List<trailheadapp__User_Badge__c> userBadges = [SELECT Id, trailheadapp__User__c,trailheadapp__Badge__c, trailheadapp__Status__c FROM trailheadapp__User_Badge__c WHERE trailheadapp__User__c in :userIds];
         if(userBadges.size() <= 0){
             System.debug('No User Badge records found.');
             return;
         }
+        Map<Id,trailheadapp__User_Badge__c> userBadgesById = new Map<Id,trailheadapp__User_Badge__c>(userBadges);
+        
         Map<Id, Set<List<Id>>> userBadgeRealityMap =  constructUserBadgeMap(userBadges);
 
         List<List<Id>> userTrailmixBadgeTarget = createUserTrailmixBadgeTarget(userIds, userTrailmixRealityMap, userBadgeRealityMap, trailmixBadgesMap);
         List<List<Id>> userTrailmixBadgeToCreateList = compareRealityVsExpected(userTrailmixBadgeTarget, userBadges);
-        List<User_Trailmix_Badge__c> userTrailmixBadgeToCreate = constructUserTrailmixBadge(userTrailmixBadgeToCreateList);
+        List<User_Trailmix_Badge__c> userTrailmixBadgeToCreate = constructUserTrailmixBadge(userTrailmixBadgeToCreateList, userBadgesById);
         System.debug('userTrailmixBadgeToCreate size: ' + userTrailmixBadgeToCreate.size());
         System.debug('userTrailmixBadgeToCreate: ' + userTrailmixBadgeToCreate);
 
@@ -162,7 +164,7 @@ public with sharing class ScheduleCreateUserTrailmixBadgeRecords implements Sche
      * userBadgesMap: the map of set of list (badgeid, userbadge id) (value) assigned to a user (key)
      * trailmixBadgeMap: the map of badges (value) belong to a trailmix (key)
      */
-    private static List<List<Id>> createUserTrailmixBadgeTarget(Set<Id> userIds, Map<Id,Set<List<Id>>> userTrailmixMap, Map<Id,  Set<List<Id>>> userBadgeMap, Map<Id, Set<Id>> trailmixBadgesMap){
+    private static List<List<Id>> createUserTrailmixBadgeTarget(Set<Id> userIds, Map<Id, Set<List<Id>>> userTrailmixMap, Map<Id, Set<List<Id>>> userBadgeMap, Map<Id, Set<Id>> trailmixBadgesMap){
         List<List<Id>> userTrailmixBadgeToCreate = new List<List<Id>>();
         for (Id userId : userIds){
             // set of list (trailmixid, usertrailmix id)
@@ -213,8 +215,9 @@ public with sharing class ScheduleCreateUserTrailmixBadgeRecords implements Sche
     /**
      * Return a list of User Trailmix Badge records that need to be created
      * userTrailmixBadgeToCreateSet: the target list of list (User Trailmix, User Badge) records that should be created
+     * userBadges: list of User Badge records for getting the existing User Trailmix Badge records to copy the Status field to the junction
      */
-    private static List<User_Trailmix_Badge__c> constructUserTrailmixBadge(List<List<Id>> userTrailmixBadgeToCreateSet){
+    private static List<User_Trailmix_Badge__c> constructUserTrailmixBadge(List<List<Id>> userTrailmixBadgeToCreateSet, Map<Id,trailheadapp__User_Badge__c> userBadgesById){
         List<User_Trailmix_Badge__c> userTrailmixBadges = new List<User_Trailmix_Badge__c>();
         // ids[0]: User Trailmix Id, ids[1]: User Badge Id
         for(List<Id> ids : userTrailmixBadgeToCreateSet){
@@ -222,7 +225,8 @@ public with sharing class ScheduleCreateUserTrailmixBadgeRecords implements Sche
             if(ids[0] == null || ids[1] == null){
                 continue;
             }
-            userTrailmixBadges.add(new User_Trailmix_Badge__c(User_Trailmix__c = ids[0], User_Badge__c = ids[1]));
+            String status = userBadgesById.get(ids[1]).trailheadapp__Status__c;
+            userTrailmixBadges.add(new User_Trailmix_Badge__c(User_Trailmix__c = ids[0], User_Badge__c = ids[1], Status__c = status));
         }
         return userTrailmixBadges;
     }
