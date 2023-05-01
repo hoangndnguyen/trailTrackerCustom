@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Percentage_of_Completion__c</fullName>
+    <description>How many percent has a user completed a trailmix</description>
+    <externalId>false</externalId>
+    <formula>IF( Total_Badges__c == 0, 0, Completed_Badges__c /  Total_Badges__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>How many percent has a user completed a trailmix</inlineHelpText>
+    <label>Percentage of Completion</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

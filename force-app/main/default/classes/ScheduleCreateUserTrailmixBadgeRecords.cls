@@ -38,7 +38,7 @@ public with sharing class ScheduleCreateUserTrailmixBadgeRecords implements Sche
         System.debug('userTrailmixBadgeToCreate: ' + userTrailmixBadgeToCreate);
 
         if (!userTrailmixBadgeToCreate.isEmpty()) {           
-            //insert userTrailmixBadgeToCreate;
+            insert userTrailmixBadgeToCreate;
         }
     }
 
