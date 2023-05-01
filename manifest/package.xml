@@ -22,10 +22,6 @@
 		<name>CustomObject</name>
 	</types>
 	<types>
-		<members>Trailmix_Badges__c</members>
-		<name>CustomTab</name>
-	</types>
-	<types>
 		<members>User_Badge_and_User_Trailmix_Badge_Status_Sync</members>
 		<name>Flow</name>
 	</types>
